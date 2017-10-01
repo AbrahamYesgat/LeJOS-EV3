@@ -32,11 +32,11 @@ public class Navigator extends Thread {
 			motor.setAcceleration(MOTOR_ACCELERATION);
 		}
 		// travel to coordinates
+		travelTo(0, 1);
+		travelTo(1, 2);
 		travelTo(1, 0);
 		travelTo(2, 1);
 		travelTo(2, 2);
-		travelTo(0, 2);
-		travelTo(1, 1);
 	}
 	
 	/**
@@ -70,24 +70,41 @@ public class Navigator extends Thread {
 	 */
 	private void travelTo(double x, double y) {
 		
+		System.out.println(" ");
+		System.out.println("Travelling to x: " + x + ", y: " + y);
+		
 		isNavigating = true;
 		x= x*30.48;
 		y= y*30.48;
+		
+		System.out.println("x " + x);
+		System.out.println("y " + y);
+		
+		System.out.println("Odometer X " + odometer.getX());
+		System.out.println("Odometer Y " + odometer.getY());
+		
 		double deltaX = x - odometer.getX();
 		double deltaY = y - odometer.getY();
 		
-		System.out.println("DeltaX " + deltaX);
-		System.out.println("DeltaY " + deltaY);
+		System.out.println("deltaX: " + deltaX);
+		System.out.println("deltaY: " + deltaY);
+
+		System.out.println(" ");
 		
 		// calculate the minimum angle
 		double minAngle = Math.toDegrees(Math.atan2(deltaX, deltaY)) - odometer.getThetaDegrees();
 		
+		System.out.println("minAngle before correction " + minAngle);
+		
 		if (minAngle < -180) {
+			System.out.println("minAngle < -180");
 			minAngle = 360 + minAngle;
+			System.out.println("minAngle: " + minAngle);
 		} else if (minAngle > 180) {
-			minAngle = 360 - minAngle;
+			System.out.println("minAngle > 180");
+			minAngle = minAngle - 360;
+			System.out.println("minAngle: " + minAngle);
 		}
-		System.out.println("minAngle after the min:"+ Double.toString(minAngle));
 		// turn to the minimum angle
 		turnTo(minAngle);
 		
