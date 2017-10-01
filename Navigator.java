@@ -26,12 +26,11 @@ public class Navigator extends Thread {
 	 * Our main run method
 	 */
 	public void run() {
-		//reset motors
-		for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }) {
-			motor.stop();
-			motor.setAcceleration(MOTOR_ACCELERATION);
-		}
-		// travel to coordinates
+		leftMotor.stop();
+		leftMotor.setAcceleration(MOTOR_ACCELERATION);
+		rightMotor.stop();
+		rightMotor.setAcceleration(MOTOR_ACCELERATION);
+
 		travelTo(0, 1);
 		travelTo(1, 2);
 		travelTo(1, 0);
@@ -70,8 +69,8 @@ public class Navigator extends Thread {
 	 */
 	private void travelTo(double x, double y) {
 		
-		System.out.println(" ");
-		System.out.println("Travelling to x: " + x + ", y: " + y);
+//		System.out.println(" ");
+//		System.out.println("Travelling to x: " + x + ", y: " + y);
 		
 		isNavigating = true;
 		x= x*30.48;
@@ -80,16 +79,16 @@ public class Navigator extends Thread {
 		System.out.println("x " + x);
 		System.out.println("y " + y);
 		
-		System.out.println("Odometer X " + odometer.getX());
-		System.out.println("Odometer Y " + odometer.getY());
+//		System.out.println("Odometer X " + odometer.getX());
+//		System.out.println("Odometer Y " + odometer.getY());
 		
 		double deltaX = x - odometer.getX();
 		double deltaY = y - odometer.getY();
 		
-		System.out.println("deltaX: " + deltaX);
-		System.out.println("deltaY: " + deltaY);
-
-		System.out.println(" ");
+//		System.out.println("deltaX: " + deltaX);
+//		System.out.println("deltaY: " + deltaY);
+//
+//		System.out.println(" ");
 		
 		// calculate the minimum angle
 		double minAngle = Math.toDegrees(Math.atan2(deltaX, deltaY)) - odometer.getThetaDegrees();
@@ -97,9 +96,9 @@ public class Navigator extends Thread {
 		System.out.println("minAngle before correction " + minAngle);
 		
 		if (minAngle < -180) {
-			System.out.println("minAngle < -180");
+			// System.out.println("minAngle < -180");
 			minAngle = 360 + minAngle;
-			System.out.println("minAngle: " + minAngle);
+			// System.out.println("minAngle: " + minAngle);
 		} else if (minAngle > 180) {
 			System.out.println("minAngle > 180");
 			minAngle = minAngle - 360;

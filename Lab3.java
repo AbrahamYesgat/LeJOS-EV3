@@ -14,13 +14,13 @@ public class Lab3 {
 	
 	// Left motor connected to output A
 	// Right motor connected to output D
-	private static final Port sensorPort = LocalEV3.get().getPort("S3");
+	private static final Port sensorPort = LocalEV3.get().getPort("S1");
 	private static final EV3LargeRegulatedMotor sensorMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	
 	// Characteristics of our vehicle
-	public static final double TRACK = 10.7;
+	public static final double TRACK = 11.6;
 	public static final double RADIUS = 2.1;
 	
 	public static void main(String[] args) {
