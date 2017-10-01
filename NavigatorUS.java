@@ -75,10 +75,9 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 	    	System.out.println("initialTheta: " + initialTheta);
 	    	System.out.println("getTheta: " + odometer.getTheta());
 	    	System.out.println("Subtract initial from current " + (initialTheta - Math.toDegrees(odometer.getTheta())));
-	    	if (initialTheta - Math.toDegrees(odometer.getTheta()) <= 360 && 
-	    		initialTheta - Math.toDegrees(odometer.getTheta()) >= 270) {
+	    	if (initialTheta - Math.toDegrees(odometer.getTheta()) >= 90) {
 	    		sensorMotor.rotate(-45);
-	    		turnTo(Math.toRadians(-90.0));
+	    		turnTo(Math.toRadians(90.0));
 	    		leftMotor.stop(true);
 	    		rightMotor.stop(true);
 	    	} else {
@@ -112,7 +111,9 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 	        sensorMotor.rotate(45);
 	        followingWall = true;
 	        System.out.println(initialTheta);
-	    } 
+	    } else {
+	    	return;
+	    }
 	    
 //	    else if (avgDistance > 25 && distance < 35) {
 //	        leftMotor.setSpeed(motorHigh); // Start robot moving forward
