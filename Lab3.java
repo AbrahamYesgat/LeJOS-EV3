@@ -20,7 +20,7 @@ public class Lab3 {
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	
 	// Characteristics of our vehicle
-	public static final double TRACK = 11;
+	public static final double TRACK = 10.7;
 	public static final double RADIUS = 2.1;
 	
 	public static void main(String[] args) {
