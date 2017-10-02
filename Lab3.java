@@ -14,7 +14,7 @@ public class Lab3 {
 	
 	// Left motor connected to output A
 	// Right motor connected to output D
-	private static final Port sensorPort = LocalEV3.get().getPort("S1");
+	// Sensor motor to output B
 	private static final EV3LargeRegulatedMotor sensorMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
@@ -26,13 +26,11 @@ public class Lab3 {
 	public static void main(String[] args) {
 		int buttonChoice;
 		
-		@SuppressWarnings("resource")							    // Because we don't bother to close this resource
-		SensorModes ultrasonicSensor = new EV3UltrasonicSensor(sensorPort);		// usSensor is the instance
-		SampleProvider usDistance = ultrasonicSensor.getMode("Distance");	// usDistance provides samples from this instance
-		float[] usData = new float[1];		// usData is the buffer in which data are returned
-		UltrasonicPoller usPoller = null;									// the selected controller on each cycle
+		SensorModes ultrasonicSensor = new EV3UltrasonicSensor(LocalEV3.get().getPort("S1"));	
+		SampleProvider usDistance = ultrasonicSensor.getMode("Distance");	
+		float[] usData = new float[1];		
+		UltrasonicPoller usPoller; 
 
-		// some objects that need to be instantiated
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		Odometer odometer = new Odometer(leftMotor, rightMotor, TRACK);
 
@@ -43,23 +41,21 @@ public class Lab3 {
 			t.clear();
 
 			// ask the user whether the motors should drive in a square or float
-			t.drawString("< Left    |Right >     ", 0, 0);
-			t.drawString("          |            ", 0, 1);
-			t.drawString("  With    | Without    ", 0, 2);
-			t.drawString("obstacles | obstacles  ", 0, 3);
-			t.drawString("          |            ", 0, 4);
+			t.drawString("< Left    | Right >     ", 0, 0);
+			t.drawString("          |             ", 0, 1);
+			t.drawString("  Nav     | Nav         ", 0, 2);
+			t.drawString("  w/ Block| w/o Block   ", 0, 4);
 
 			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT
 				&& buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			NavigatorUS navigatorUS = new NavigatorUS(leftMotor, rightMotor, sensorMotor, odometer);
-			usPoller = new UltrasonicPoller(usDistance, usData, navigatorUS);
-			//start our odometer
+			NavigatorAvoidance navigatorAvoidance = new NavigatorAvoidance(leftMotor, rightMotor, sensorMotor, odometer);
+			usPoller = new UltrasonicPoller(usDistance, usData, navigatorAvoidance);
 			odometer.start();
 			odometryDisplay.start();
-			navigatorUS.start();
+			navigatorAvoidance.start();
 			usPoller.start();
 			
 		} else {

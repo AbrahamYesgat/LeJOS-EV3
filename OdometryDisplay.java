@@ -20,34 +20,34 @@ public class OdometryDisplay extends Thread {
 		// clear the display once
 		t.clear();
 
-//		while (true) {
-//			displayStart = System.currentTimeMillis();
-//
-//			// clear the lines for displaying odometry information
-//			t.drawString("X:              ", 0, 0);
-//			t.drawString("Y:              ", 0, 1);
-//			t.drawString("T:              ", 0, 2);
-//
-//			// get the odometry information
-//			odometer.getPosition(position, new boolean[] { true, true, true });
-//
-//			// display odometry information
-//			for (int i = 0; i < 3; i++) {
-//				t.drawString(formattedDoubleToString(position[i], 2), 3, i);
-//			}
-//
-//			// throttle the OdometryDisplay
-//			displayEnd = System.currentTimeMillis();
-//			if (displayEnd - displayStart < DISPLAY_PERIOD) {
-//				try {
-//					Thread.sleep(DISPLAY_PERIOD - (displayEnd - displayStart));
-//				} catch (InterruptedException e) {
-//					// there is nothing to be done here because it is not
-//					// expected that OdometryDisplay will be interrupted
-//					// by another thread
-//				}
-//			}
-//		}
+		while (true) {
+			displayStart = System.currentTimeMillis();
+
+			// clear the lines for displaying odometry information
+			t.drawString("X:              ", 0, 0);
+			t.drawString("Y:              ", 0, 1);
+			t.drawString("T:              ", 0, 2);
+
+			// get the odometry information
+			odometer.getPosition(position, new boolean[] { true, true, true });
+
+			// display odometry information
+			for (int i = 0; i < 3; i++) {
+				t.drawString(formattedDoubleToString(position[i], 2), 3, i);
+			}
+
+			// throttle the OdometryDisplay
+			displayEnd = System.currentTimeMillis();
+			if (displayEnd - displayStart < DISPLAY_PERIOD) {
+				try {
+					Thread.sleep(DISPLAY_PERIOD - (displayEnd - displayStart));
+				} catch (InterruptedException e) {
+					// there is nothing to be done here because it is not
+					// expected that OdometryDisplay will be interrupted
+					// by another thread
+				}
+			}
+		}
 	}
 	
 	private static String formattedDoubleToString(double x, int places) {
