@@ -27,8 +27,6 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 	// wall follower variables
 	private static final int motorLow = 50, motorHigh = 200, bandCenter = 10, bandwidth = 3, FILTER_OUT = 20;
 
-	// obstacle avoidance variables
-	private double initialTheta;
 	private static boolean hasBlockPassed = false;
 	private static boolean isPassingBlock = false;
 
@@ -56,7 +54,6 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 		System.out.println("x " + x);
 		System.out.println("y " + y);
 		
-		navigating = true;
 		x= x*30.48;
 		y= y*30.48;
 		
@@ -80,14 +77,15 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 		double distance  = Math.hypot(deltaX, deltaY);
 		
 		// move to the next point
-		leftMotor.setSpeed(FORWARD_SPEED);
-		rightMotor.setSpeed(FORWARD_SPEED);
+		leftMotor.setSpeed(FORWARD_SPEED-150);
+		rightMotor.setSpeed(FORWARD_SPEED-150);
 		leftMotor.rotate(convertDistance(RADIUS,distance), true);
 		rightMotor.rotate(convertDistance(RADIUS, distance), true);
 
-		while((leftMotor.isMoving() && rightMotor.isMoving())) {
+		double initialTheta = 0;
+		while((leftMotor.isMoving() && rightMotor.isMoving()) || followingWall) {
 			if (followingWall) {
-				if (initialTheta - odometer.getThetaDegrees() >= 50) {
+				if (initialTheta - odometer.getThetaDegrees() >= 100) {
 		    		System.out.println("Theta statement");
 
 		    		leftMotor.stop(true);
@@ -104,19 +102,19 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 				        rightMotor.setSpeed(motorHigh);
 				        leftMotor.forward();
 				        rightMotor.backward();
-				    } else if (avgDistance > 20 && avgDistance < 30) {
+				    } else if (avgDistance > 17 && avgDistance < 27) {
 				    	System.out.println("between 25 and 35");
 				        leftMotor.setSpeed(motorHigh); // Start robot moving forward
 				        rightMotor.setSpeed(motorHigh);
 				        leftMotor.forward();
 				        rightMotor.forward();
-				  	} else if (avgDistance >= 20) {
+				  	} else if (avgDistance >= 17) {
 				  		System.out.println("greater than 15");
-				        leftMotor.setSpeed(100); // Left turn
-				        rightMotor.setSpeed(motorHigh-20);//motorLow-20
+				        leftMotor.setSpeed(110); // Left turn
+				        rightMotor.setSpeed(motorHigh-10);//motorLow-20
 				        leftMotor.forward();
 				        rightMotor.forward();
-				    } else if (avgDistance <= 30){
+				    } else if (avgDistance <= 27){
 				    	System.out.println("less than 35");
 				        leftMotor.setSpeed(motorHigh); // Right turn
 				        rightMotor.setSpeed(100);
@@ -126,7 +124,7 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 		    	}
 			}
 			
-			if(avgDistance <= 15 && !followingWall) {
+			if(avgDistance <= 8 && !followingWall) {
 				System.out.println("Obstacle detected");
 				followingWall = true;
 				initialTheta = odometer.getThetaDegrees();
@@ -138,10 +136,9 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 		
 	    leftMotor.stop(true);
 		rightMotor.stop(true);
-
-		navigating = false;
 		leftMotor.setSpeed(0);
 		rightMotor.setSpeed(0);
+		System.out.println("Turn to has finished, count is: " + count);
 	}
 	
 	
@@ -186,6 +183,7 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 
 	private void turnTo(double theta) {
 		
+		System.out.println("Turn to: " + theta);
 		leftMotor.setSpeed(ROTATE_SPEED);
 		rightMotor.setSpeed(ROTATE_SPEED);
 		
@@ -198,8 +196,6 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 			rightMotor.rotate(-convertAngle(RADIUS, TRACK, theta), false);
 		}
 		
-//		leftMotor.setSpeed(0);
-//		rightMotor.setSpeed(0);
 	}
 
 	@Override
