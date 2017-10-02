@@ -22,7 +22,7 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 	private double avgDistance = 20;
 	
 	private int count = 0;
-	private double[][] points = {{0, 2}, {1, 1}, {2, 2}, {2, 1}, {1, 0}};
+	private double[][] points = {{1, 1}, {0, 2}, {2, 2}, {2, 1}, {1, 0}};
 	
 	// wall follower variables
 	private static final int motorLow = 50, motorHigh = 200, bandCenter = 10, bandwidth = 3, FILTER_OUT = 20;
@@ -47,6 +47,7 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 		rightMotor.stop();
 			
 		for(; count < 5; count++) {
+			System.out.println("Count: " + count);
 			travelTo(points[count][0], points[count][1]);
 		}
 	}
@@ -93,7 +94,7 @@ public class NavigatorUS extends Thread implements UltrasonicController {
 		    		rightMotor.stop(true);
 		    		sensorMotor.rotate(-60);
 		    		followingWall = false;
-		    		count --;
+		    		this.count = count - 1;
 		    		break;
 		    	} else {
 		    		System.out.println("Bang Bang Bang");
